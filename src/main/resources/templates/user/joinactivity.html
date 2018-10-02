@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <link rel="stylesheet" th:href="@{/plugins/bootstrap/css/bootstrap.css}"></link>
+        <link rel="stylesheet" th:href="@{/plugins/jquery-ui/jquery-ui.css}"></link>
+        <script th:src="@{/plugins/jquery-3.3.1.min.js}"></script>
+        <script th:src="@{/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+		<script th:src="@{/plugins/jquery-ui/jquery-ui.js}"></script>
+<script> 
+function del() { 
+ var msg = "確定要取消參加這個活動嗎?"; 
+ if (confirm(msg)==true){ 
+  return true; 
+ }else{ 
+  return false; 
+ } 
+} 
+</script> 
+        <title>活動足跡</title>
+    </head>
+    <body>
+        <div th:replace="fragments/header :: header"></div>
+		<div class="container">
+			<div>
+
+		<h2>活動足跡</h2>
+		
+		
+		<ul class="nav nav-tabs" id="myTab" role="tablist">
+		  <li class="nav-item">
+		    <a class="nav-link active" id="check-tab" data-toggle="tab" href="#check" role="tab" aria-controls="check" aria-selected="true">我參加的活動</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="true">參加活動歷史</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link" id="cancel-tab" data-toggle="tab" href="#cancel" role="tab" aria-controls="cancel" aria-selected="false">取消參加的活動</a>
+		  </li>
+
+		</ul>
+		<div class="tab-content" id="myTabContent">
+		  <div class="tab-pane fade show active" id="check" role="tabpanel" aria-labelledby="check-tab">
+		  <table class="table table-hover">
+		     <thead>
+		        <tr>
+		            <th></th>
+					<th>活動名稱</th>
+					<th>活動日期</th>
+					<th>活動地點</th>
+					<th>活動說明</th>
+					<th>活動創辦人</th>
+		            <th></th>
+		        </tr>
+		        </thead>
+		        <tbody>
+		        <tr  th:each=" bean: ${checkList}" th:if="${#authentication.name != bean.createUser}">
+		            <th scope="row" th:text="${bean.activityId}"></th>
+		            <td ><a th:href="@{${'/activity/'+bean.activityId+'/detail'}}"><label  th:text="${bean.activityName}"></label></a></td>
+		            <td th:text="${bean.activityDate}"></td>
+		            <td th:text="${bean.activityPlace}"></td>
+					<td th:text="${bean.actiivityDescription}"></td>
+					<td th:text="${bean.activityHost}"></td>
+					<td>
+					</td>
+		        </tr>
+		        </tbody>
+		    </table>
+		  </div>
+		  <div class="tab-pane fade" id="pay" role="tabpanel" aria-labelledby="pay-tab">
+		  
+		  
+		  <div class="accordion" id="accordionPay">
+			  <div class="card" th:each=" bean: ${payList}" th:if="${#authentication.name == bean.userId}">
+			    <div class="card-header" th:id="'headingOne'+${bean.orderId}">
+			      <h5 class="mb-0">
+			       <label  th:text="${bean.activityName}"></label>
+  		          </h5>
+  		                 訂單編號:<label  th:text="${bean.orderId}"></label> 
+			      <button class="btn btn-info" type="button" data-toggle="collapse" th:data-target="'#collapse'+${bean.orderId}" aria-expanded="false" th:aria-controls="'#collapse'+${bean.orderId}">
+			               票券
+			      </button>
+			      <a th:href="@{${'/order/'+bean.orderId+'/cancel'}}" class="btn btn-info" >取消訂單</a>
+			    </div>
+			
+			    <div th:id="'collapse'+${bean.orderId}" class="collapse" th:aria-labelledby="'heading'+${bean.orderId}" data-parent="#accordionPay">
+			      <div class="card-body">
+					  <table class="table table-hover">
+					     <thead>
+					        <tr>
+								<th>票券號碼</th>
+								<th>參加人</th>
+								<th>票券單價</th>
+								<th>票券狀態</th>
+					        </tr>
+					        </thead>
+					        <tbody>
+					        <tr  th:each="ticket: ${bean.ticketList}" th:if="${#authentication.name == bean.userId}">
+					            <td><label  th:text="${ticket.ticketNo}"></label></td>
+					            <td><label  th:text="${bean.userId}"></label></td>
+								<td><label  th:text="${ticket.ticketPrice}"></label></td>
+					        </tr>
+					        </tbody>
+					    </table>
+			      </div>
+			    </div>	    
+			    
+			  </div>
+			</div>	
+			
+			</div>
+
+		</div>
+
+	      	</div>
+	     	<div th:replace="fragments/footer :: footer"></div>
+	     </div>
+	     
+    </body>
+</html>
+

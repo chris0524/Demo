@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-tw" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <link rel="stylesheet" th:href="@{/plugins/bootstrap/css/bootstrap.css}"></link>
+        <link rel="stylesheet" th:href="@{/plugins/jquery-ui/jquery-ui.css}"></link>
+        <script th:src="@{/plugins/jquery-3.3.1.min.js}"></script>
+        <script th:src="@{/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+		<script th:src="@{/plugins/jquery-ui/jquery-ui.js}"></script>
+
+        <title>公告</title>
+    </head>
+    <body>
+        <div th:replace="fragments/header :: header"></div>
+		<div class="container">
+			<div>
+
+		<h2>公告列表</h2>
+		
+		
+		<ul class="nav nav-tabs" id="myTab" role="tablist">
+		  <li class="nav-item">
+		    <a class="nav-link active" id="message-tab" data-toggle="tab" href="#message" role="tab" aria-controls="message" aria-selected="true">站務公告</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link" id="waitcheck-tab" data-toggle="tab" href="#waitcheck" role="tab" aria-controls="waitcheck" aria-selected="false">活動通告</a>
+		  </li>
+
+		</ul>
+		
+		<div class="tab-content" id="myTabContent">
+		
+		  <div class="tab-pane fade show active" id="message" role="tabpanel" aria-labelledby="message-tab">
+		  <table class="table table-hover">
+		     <thead>
+		        <tr>
+		            <th></th>
+					<th>系統公告</th>
+					<th>公告內容</th>
+					<th>發布日期</th>
+		            <th></th>
+		        </tr>
+		        </thead>
+		        <tbody>
+		        <tr  th:each=" bean: ${beanList}" >
+		            <th ></th>
+		            <td th:text="${bean.MessageName}"></td>
+		            <td th:text="${bean.Message}"></td>
+					<td th:text="${bean.SendTime}"></td>
+					<td>
+
+					</td>
+		        </tr>
+		        </tbody>
+		    </table>
+		  </div>
+		  
+		  
+		  <div class="tab-pane fade" id="waitcheck" role="tabpanel" aria-labelledby="waitcheck-tab">
+		  <table class="table table-hover">
+		     <thead>
+		        <tr>
+		            <th></th>
+					<th>活動名稱</th>
+					<th>活動日期</th>
+					<th></th>
+		            <th></th>
+		        </tr>
+		        </thead>
+		        <tbody>
+		        <tr  th:each=" bean: ${waitcheckList}" th:if="${#authentication.name == bean.createUser}">
+		            <th scope="row" th:text="${bean.activityId}"></th>
+		            <td ><a th:href="@{${'/activity/'+bean.activityId+'/detail'}}"><label  th:text="${bean.activityName}"></label></a></td>
+		            <td th:text="${bean.activityDate}"></td>
+		            <td th:text="${bean.activityPlace}"></td>
+					<td th:text="${bean.actiivityDescription}"></td>
+					<td>
+					<div >
+					<a th:href="@{${'/activity/'+bean.activityId+'/cancel'}}" onclick="javascript:return del()" class="btn btn-info" >取消活動</a>
+					</div>
+					</td>
+		        </tr>
+		        </tbody>
+		    </table>
+			</div>
+			
+
+
+		</div>
+
+	      	</div>
+	     	<div th:replace="fragments/footer :: footer"></div>
+	     </div>
+	     
+    </body>
+</html>
+

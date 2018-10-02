@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-tw" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet" th:href="@{/plugins/bootstrap/css/bootstrap.css}"></link>
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"></link>
+<script th:src="@{/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script th:src="@{/plugins/jquery-3.3.1.min.js}"></script>
+<script th:src="@{/plugins/jquery-ui/jquery-ui.js}"></script>
+</head>
+<body>
+	<div th:fragment="header">
+		<div class="main_h" id="myHeader">
+			<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+				<a class="navbar-brand logoimg" href="/"> <img
+					th:src="@{/images/1537338080938_resized.jpg}" height="48px">Fun活動
+				</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse"
+					data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
+					aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div id="navbarNavDropdown" class="navbar-collapse collapse">
+					<ul class="navbar-nav mr-auto">
+						<li class="nav-item dropdown dropdown-hover"><a
+							class="nav-link dropdown-toggle" href="http://example.com"
+							id="navbarDropdownMenuLink" data-toggle="dropdown"
+							aria-haspopup="true" aria-expanded="false"> <span
+								th:text="最新消息"></span>
+						</a>
+							<div class="dropdown-menu dropdown-content"
+								aria-labelledby="navbarDropdownMenuLink">
+								<a href="/member/systemmessage" class="dropdown-item">站務公告</a> <a
+									href="#" class="dropdown-item">活動通告</a>
+							</div></li>
+						<li class="nav-item"><a class="nav-link" href="/activity/">活動列表</a>
+						</li>
+					</ul>
+					<form class="form-inline my-2 my-lg-0 search-containerrr"
+						th:action="@{/activity/search}" method="post">
+						<input class="form-control mr-sm-2" type="search"
+							name="searchValue" placeholder="Search" aria-label="Search"  required>
+						<button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+<!-- 						<div class="dropdownnn-content"> -->
+<!-- 							熱門搜尋： <a href="#夏日衝浪玩水趣">夏日衝浪玩水趣</a> <a href="#輕水彩繪畫">輕水彩繪畫</a> <a -->
+<!-- 								href="#職人帶你玩木工">職人帶你玩木工</a> <a href="#美食攝影課">美食攝影課</a> -->
+<!-- 						</div> -->
+					</form>
+					<ul class="navbar-nav"
+						th:if="${#authorization.expression('!isAuthenticated()')}">
+						<li class="nav-item"><a class="nav-link" href="/login"
+							th:href="@{/login}">登入</a></li>
+						<li class="nav-item"><a class="nav-link" href="/register/add"
+							th:href="@{/register/addUser}">註冊</a></li>
+					</ul>
+					<ul class="navbar-nav"
+						th:if="${#authorization.expression('isAuthenticated()')}">
+						<li class="nav-item navbar-buttonspace"><a
+							class="btn btn-primary" href="/activity/select">開活動</a></li>
+						<li class="nav-item navbar-buttonspace"
+							th:if="${#authorization.expression('hasAuthority(''M'')')}">
+							<a class="btn btn-primary" href="/admin/">管理</a>
+						</li>
+						<li class="nav-item navbar-buttonspace"><a
+							class="btn btn-primary" href="/chat">聊天室</a></li>
+						<li class="nav-item dropdown  dropdown-hover"><a
+							class="nav-link dropdown-toggle" href="http://example.com"
+							id="navbarDropdownMenuLink" data-toggle="dropdown"
+							aria-haspopup="true" aria-expanded="false"> <span
+								th:text="${#authentication.name}">User</span>
+						</a>
+
+							<div class="dropdown-menu dropdown-content"
+								aria-labelledby="navbarDropdownMenuLink">
+								<a class="dropdown-header">活動專區</a> <a class="dropdown-item"
+									href="/activity/browser">我舉辦的活動</a> <a class="dropdown-item"
+									href="/ticket/tickethomepage">我參加的活動</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-header">會員專區</a>
+								<!--  a class="dropdown-item" href="/member/myhomepage">會員資料</a> -->
+								<a class="dropdown-item" th:href="@{${'/member/edit'}}">修改會員資料</a>
+								<a class="dropdown-item" href="/member/verify">帳號認證</a>
+							</div></li>
+						<li class="nav-item">
+							<form th:action="@{/logout}" method="post">
+								<input class="btn btn-primary" type="submit" value="登出" />
+							</form>
+						</li>
+					</ul>
+				</div>
+
+				<div class="sidebar_right2">
+					<span style="cursor: pointer" onclick="openNav()"> <img
+						th:src="@{https://cdn4.iconfinder.com/data/icons/flat-color-sale-tag-set/512/Accounts_label_promotion_sale_tag_18-512.png}"
+						width="100px" class="hvr-pulse">
+					</span>
+				</div>
+				<div id="myNav" class="overlay">
+					<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">
+						&times;</a>
+					<div class="overlay-content overlay-scroll">
+
+						<div>
+							<h5 class="card-title" th:text="${'雜學工作坊：一場真實的文化展演＿部落共學'}"></h5>
+							<p class="card-text" th:text="${'部落文化的真實樣貌是如何？ 團隊青年與部落孩童是如何共同學習，一同找尋生命的答案？將透過桌遊及換桌交流活動，讓參與者體會到部落兒童眼中真實的部落生活、在本團隊進入部落後所獲得的成長蛻變、以及團隊青年建構共學系統的核心元素。 歡迎大家與Ibu一同深入其境，來一場真實的文化行動展演！'}">
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="btn-group">
+									<div onclick="location.href='/activity/2/detail';"
+										class="btn btn-sm btn-outline-secondary">詳細</div>
+								</div>
+								<small class="text-muted">9 mins
+									<div onclick="topFunction()" id="myBtn" title="Go to top">
+										<img
+											th:src="@{http://cdn.onlinewebfonts.com/svg/img_158933.png}"
+											width="24px">
+									</div>
+								</small>
+							</div>
+						</div>
+						
+						<div>
+							<h5 class="card-title" th:text="${'2018台北國際自行車展產業論壇'}"></h5>
+							<p class="card-text" th:text="${'「2018台北國際自行車產業論壇」聯手歐洲最具指標性之自行車專業媒體Bike Europe，結合海內外資源，邀請重量級企業與會，分享e-bike趨勢與設計、最新e-bike傾銷法案及案例分享、智慧製造及智慧交通運輸4項核心議題做深度分析和交流。'}">
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="btn-group">
+									<div onclick="location.href='/activity/4/detail';"
+										class="btn btn-sm btn-outline-secondary">詳細</div>
+								</div>
+								<small class="text-muted">9 mins
+									<div onclick="topFunction()" id="myBtn" title="Go to top">
+										<img
+											th:src="@{http://cdn.onlinewebfonts.com/svg/img_158933.png}"
+											width="24px">
+									</div>
+								</small>
+							</div>
+						</div>
+
+						<a href="/activity/">
+							<div class="overlay-more">查看更多</div>
+						</a>
+					</div>
+				</div>
+
+				<script th:inline="javascript">
+					function openNav() {
+						document.getElementById("myNav").style.width = "310px";
+					}
+					function closeNav() {
+						document.getElementById("myNav").style.width = "0%";
+					}
+					function topFunction() {
+						$(".overlay").scrollTop("0");
+					}
+				</script>
+
+			</nav>
+			<div class="search-container-outerbox" id="">
+				<div class="search-container-groupbox">
+					<div class="search-container-box">
+					<a href="/activity/list/學習" style="color:black">📚學習</a></div>
+					<div class="search-container-box">
+					<a href="/activity/list/運動" style="color:black">🌊運動</a></div>
+					<div class="search-container-box">
+					<a href="/activity/list/旅遊" style="color:black">👪旅遊</a></div>
+					<div class="search-container-box">
+					<a href="/activity/list/美食" style="color:black">👨‍🍳美食</a></div>
+					<div class="search-container-box">
+					<a href="/activity/list/娛樂" style="color:black">🔨娛樂</a></div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" th:inline=javascript>
+			window.onscroll = function() {
+				myFunction()
+			};
+			var header = document.getElementById("myHeader");
+			var sticky = header.offsetTop;
+			function myFunction() {
+				if (window.pageYOffset > sticky) {
+					header.classList.add("sticky");
+				} else {
+					header.classList.remove("sticky");
+				}
+			}
+		</script>
+
+
+	</div>
+</body>
+</html>

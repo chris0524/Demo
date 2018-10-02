@@ -1,0 +1,235 @@
+<html lang="zh-tw" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<link rel="stylesheet" th:href="@{/plugins/bootstrap/css/bootstrap.css}"></link>
+<link rel="stylesheet" th:href="@{/plugins/jquery-ui/jquery-ui.css}"></link>
+<script th:src="@{/plugins/jquery-3.3.1.min.js}"></script>
+<script th:src="@{/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/plugins/jquery-ui/jquery-ui.js}"></script>
+<script>
+	$(function() {
+		$("#activityDate").datepicker({
+			dateFormat : 'yy-mm-dd'
+		});
+	});
+	
+// 	alert([[${bean.activityDate}]]);
+// 	alert([[${bean.endTime}]]);
+</script>
+<title>活動詳情</title>
+</head>
+<body>
+	<div th:replace="fragments/header :: header"></div>
+	<div class="container">
+		<div class="progress sidebar_top2">
+			<div class="progress-bar progress-bar-striped bg-success"
+				role="progressbar" style="width: 33%;" aria-valuenow="33"
+				aria-valuemin="0" aria-valuemax="100">報名要參加的活動</div>
+			<div class="progress-bar progress-bar-striped bg-secondary"
+				role="progressbar" style="width: 34%;" aria-valuenow="33"
+				aria-valuemin="0" aria-valuemax="100">購買活動票券</div>
+			<div class="progress-bar progress-bar-striped bg-secondary"
+				role="progressbar" style="width: 33%;" aria-valuenow="33"
+				aria-valuemin="0" aria-valuemax="100">選擇付款方式</div>
+		</div>
+
+
+		<div class="hero-unit" th:action="@{/activity/detail}">
+			<div class="box3-father">
+				<div class="form-group">
+					<label for="activityImage" class="col-sm-2 control-label"></label>
+					<div class="col-sm-12 detail-img-outter">
+						<img class="detail-img-inner" th:src="@{${'/activity/'+bean.activityId+'/image/'+bean.activityImage}}" />
+					</div>
+				</div>
+
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>活動名稱</th>
+						</tr>
+					</thead>
+				</table>
+				<div class="form-group">
+					<div class="col-sm-10">
+						<label th:text="${bean.activityName}"></label>
+					</div>
+				</div>
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>活動主辦人</th>
+						</tr>
+					</thead>
+				</table>
+				<div class="form-group">
+					<div class="col-sm-10">
+						<label th:text="${bean.activityHost}"></label>
+					</div>
+				</div>
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>活動開始日期</th>
+						</tr>
+					</thead>
+				</table>
+				<div class="form-group">
+					<div class="col-sm-10">
+						<label th:text="${bean.activityDate}"></label>
+
+						<!--  加入行事曆從這邊開始				 -->
+						<!-- AddEvent script -->
+						<script type="text/javascript"
+							src="https://addevent.com/libs/atc/1.6.1/atc.min.js" async defer></script>
+						<!-- Remove "AddEvent" from the dropdown with the following CSS -->
+						<!-- Button code -->
+						<div title="Add to Calendar" class="addeventatc"
+							style="z-index: 500;">
+							加入行事曆 <span class="start"
+								th:text="${#dates.format(bean.activityDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+							<span class="end"
+								th:text="${#dates.format(bean.endTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+							<span class="timezone">Asia/Taipei</span> <span class="title"><label
+								th:text="${bean.activityName}"></label></span> <span
+								class="description">Description of the event</span> <span
+								class="location"><label th:text="${bean.activityPlace}"></label></span>
+						</div>
+					</div>
+				</div>
+
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>活動結束日期</th>
+						</tr>
+					</thead>
+				</table>
+				<div class="form-group">
+					<div class="col-sm-10">
+						<label th:text="${bean.endTime}"></label>
+					</div>
+				</div>
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>活動地點</th>
+						</tr>
+					</thead>
+				</table>
+				<div class="form-group">
+					<div class="col-sm-10">
+						<label th:text="${bean.activityPlace}"></label>
+					</div>
+					<div>
+						<script type="text/javascript" th:inline=javascript>  
+  $(function() {
+  var url = [[${bean.activityPlace}]];
+  $('#map').attr('src',"https://www.google.com/maps/embed/v1/place?key=AIzaSyADlxYwuuYbgmR0fu2jNw2Nmd-VYn-Hpz4&q="+
+    url) }); 
+</script>
+						<iframe id="map" width="500" height="450" frameborder="0"
+							style="border: 0" allowfullscreen></iframe>
+					</div>
+
+
+				</div>
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>活動描述</th>
+						</tr>
+					</thead>
+				</table>
+				<div class="form-group">
+					<div class="col-sm-10">
+						<label th:text="${bean.actiivityDescription}"></label>
+					</div>
+				</div>
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>連絡電話</th>
+						</tr>
+					</thead>
+				</table>
+				<div class="form-group">
+					<div class="col-sm-10">
+						<label th:text="${bean.HostTel}"></label>
+					</div>
+				</div>
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>連絡信箱</th>
+						</tr>
+					</thead>
+				</table>
+				<div class="form-group">
+					<div class="col-sm-10">
+						<label th:text="${bean.HostMail}"></label>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<a href="/activity/list" class="btn btn-info">回列表</a> <a
+							th:if="${#authentication.name != bean.createUser}"
+							th:href="@{${'/order/activity/'+bean.activityId+'/signin'}}"
+							class="btn btn-info">報名活動</a> <a
+							th:if="${#authentication.name == bean.createUser && bean.activityStatus != '9' && bean.activityStatus != '2'}"
+							th:href="@{${'/activity/'+bean.activityId+'/edit'}}"
+							class="btn btn-danger">編輯活動</a>
+
+					</div>
+
+				</div>
+			</div>
+
+			<!-- 置右報名欄位 -->
+			<div class="box3" id="box3">
+				<button data-social="twitter" class="btn-twitter">分享至Twitter</button>
+				<button data-social="facebook" class="btn-facebook">分享至Facebook</button>
+				<button data-social="googleplus" class="btn-google">分享至Google+</button>
+
+				<!-- goodshare.js v4.1.2 -->
+				<script
+					src="https://cdnjs.cloudflare.com/ajax/libs/goodshare.js/4.1.2/goodshare.min.js"></script>
+				<div class="sidebar_right2_small">
+					<!-- 活動名稱 -->
+					<li><thead>活動名稱</thead></li>
+					<div style="margin-bottom: 10px;">
+						<div th:text="${bean.activityName}"></div>
+					</div>
+					<li><thead>活動類型</thead></li>
+					<div style="margin-bottom: 10px;">
+						<div th:text="${bean.activityType}"></div>
+					</div>
+					<!-- 活動時間 -->
+					<li><thead>活動開始日期</thead></li>
+					<div style="margin-bottom: 10px;">
+						<div class="sidebar_right2_small-time"
+							th:text="${bean.activityDate}"></div>
+					</div>
+					<li><thead>活動結束日期</thead></li>
+					<div style="margin-bottom: 10px;">
+						<div class="sidebar_right2_small-time" th:text="${bean.endTime}"></div>
+					</div>
+
+					<!-- 報名按鈕 -->
+					<div style="margin-top: 20px; margin-left: 15px;">
+						<a th:if="${#authentication.name != bean.createUser}"
+							th:href="@{${'/order/activity/'+bean.activityId+'/signin'}}"
+							class="sidebar_right2_small-box-containerbutton">報名活動</a>
+					</div>
+				</div>
+				
+			
+				
+			</div>
+		</div>
+		<div th:replace="fragments/footer :: footer"></div>
+	</div>
+
+</body>
+</html>

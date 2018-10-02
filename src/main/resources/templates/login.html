@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-tw" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<link rel="stylesheet" th:href="@{/plugins/bootstrap/css/bootstrap.css}"></link>
+<link rel="stylesheet" th:href="@{/plugins/bootstrap/css/login-style.css}" />
+<script th:src="@{/plugins/jquery-3.3.1.min.js}"></script>
+<script th:src="@{/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"></link>
+<title>歡迎登入</title>
+</head>
+<body>
+	<div th:replace="fragments/header :: header"></div>
+	<div class="container">
+		<div class="hero-unit">
+			<h1>登入</h1>
+			<br>
+			<div class="with:80%">
+				<div class="alert alert-danger" role="alert" th:if="${param.error}">
+					輸入的帳號或密碼錯誤</div>
+				<div class="alert alert-success" role="alert"
+					th:if="${param.logout}">你已經登出</div>
+				<form class="form-horizontal" th:action="@{/login}" method="post">
+					<fieldset class="box1-fieldset">
+<!-- 						<div class="form-group" style="padding-left:100px;"> -->
+<!-- 							<h3>使用現有的社群帳號登入</h3> -->
+<!-- 								<div class="col-sm-offset-2 col-sm-10"> -->
+<!-- 									<button onclick="location.href='#'" id="loginFB" data-social="facebook" class="btn-facebook">以Facebook登入</button> -->
+<!-- 									<button onclick="location.href='#'" id="loginGoogle" data-social="googleplus" class="btn-google">以Google+登入</button> -->
+<!-- 								</div>								 -->
+<!-- 						</div> -->
+<!-- 						<div class="form-group"> -->
+<!-- 							<h5 style="padding-left:200px;">或</h5> -->
+<!-- 						</div> -->
+						<div class="form-group">
+						<label for="username" class="col-sm-2 control-label">使用者帳號</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" name="username"
+									id="username" placeholder="帳號" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="password" class="col-sm-2 control-label">使用者密碼</label>
+							<div class="col-sm-10">
+								<input type="password" class="form-control" name="password"
+									id="password" placeholder="密碼" />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<div class="social-wthree-icons bnragile-icons">
+									<input type="submit" value="登入" class="btn btn-info" />
+									<input type="reset" value="清除" class="btn btn-info" />
+									還不是Fun活動會員?<a class="fa fa-arrow-right" href="/register/addUser"><span style="z-index:500;font-family:'cwTeXYen',sans-serif;font-style: normal;font-weight: 550;">註冊</span></a>								
+								</div>
+							</div>
+						</div>
+					</fieldset>
+				</form>
+				<form class="form-horizontal" th:action="@{/register/doFbAddUser}" method="post">
+
+		<div style="visibility: hidden">
+
+			<input type="text" id="fgName" name="username"> 
+			<input type="text" id="fgEmail"name="email">
+			<input type="text" id="fgPic" name="user_photo">
+			<input type="submit" value="登入" id="click">
+
+		</div>
+	</form>
+<script>
+		//Google登入
+		var googleUser = {};
+		var startApp = function() {
+			gapi.load('auth2', function() {
+				attachSignin(document.getElementById('loginGoogle'));
+			});
+		};
+		function attachSignin(element) {
+			auth2 = gapi.auth2
+					.init({
+						client_id : '694831066590-929gg592s3qr0cuh5uh7mt99jv1etiue.apps.googleusercontent.com', //客户端ID
+						cookiepolicy : 'single_host_origin',
+						scope : 'profile'
+					});
+			auth2.attachClickHandler(element, {}, function(googleUser) {
+				var profile = auth2.currentUser.get().getBasicProfile();
+				// 			console.log('ID: ' + profile.getId());
+				// 			console.log('Full Name: ' + profile.getName());
+				// 			console.log('Given Name: ' + profile.getGivenName());
+				// 			console.log('Family Name: ' + profile.getFamilyName());
+				// 			console.log('Image URL: ' + profile.getImageUrl());
+				// 			console.log('Email: ' + profile.getEmail());
+				document.getElementById("fgName").value = profile.getName();
+				document.getElementById("fgEmail").value = profile.getEmail();
+				document.getElementById("click").click();
+			}, function(error) {
+				console.log(JSON.stringify(error, undefined, 2));
+			});
+		}
+		startApp();
+
+		//FB初始化
+		window.fbAsyncInit = function() {
+			FB.init({
+				appId : '1889436381117267',
+				cookie : true,
+				xfbml : true,
+				version : 'v3.1'
+			});
+			//記錄用戶行為資料，可在後台查看用戶資訊  
+			FB.AppEvents.logPageView();
+		};
+		//嵌入臉書sdk
+		(function(d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) {
+				return;
+			}
+			js = d.createElement(s);
+			js.id = id;
+			js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+
+		$(function() {
+			$("#loginFB").click(function() { //點擊登入按鈕	      
+			FB.getLoginStatus(function(response) { //檢查臉書登入狀態	        
+			if (response.authResponse) { //如果已經有授權過應用程式	
+			FB.api('/me',{fields : 'id,name,email,picture'},
+					function(response) { //呼叫FB.api()取得使用者資料
+		//	console.log("response.id:"+ response.id);
+		//	console.log("response.name:"+ response.name);
+		//	console.log("response.email:"+ response.email);
+			//取得資料送至controller比對
+
+			document.getElementById("fgName").value = response.name;
+			document.getElementById("fgEmail").value = response.email;
+			document.getElementById("fgPic").value = response.picture;
+			document.getElementById("click").click();});
+
+			} else { //沒授權過應用程式	          
+				FB.login(function(response) { //呼叫FB.login()請求使用者授權
+					if (response.authResponse) {
+						FB.api('/me',{fields : 'id,name,email'},
+							function(response) {
+							document.getElementById("fgName").value = response.name;
+							document.getElementById("fgEmail").value = response.email;
+							document.getElementById("fgPic").value = response.picture;
+							document.getElementById("click").click();
+							});
+						}
+					},
+						{scope : 'email'});
+											}
+										});
+							});
+		});
+	</script>
+			</div>
+		</div>
+		<div th:replace="fragments/footer :: footer"></div>
+	</div>
+</body>
+</html>
+

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-tw" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<link rel="stylesheet" th:href="@{/plugins/bootstrap/css/bootstrap.css}"></link>
+<link rel="stylesheet" th:href="@{/plugins/jquery-ui/jquery-ui.css}"></link>
+<script th:src="@{/plugins/jquery-3.3.1.min.js}"></script>
+<script th:src="@{/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/plugins/jquery-ui/jquery-ui.js}"></script>
+<script> 
+function check() { 
+ var msg = "確認發送公告?"; 
+ if (confirm(msg)==true){ 
+  return true; 
+ }else{ 
+  return false; 
+ } 
+} 
+</script> 
+
+<title>發送公告事項</title>
+</head>
+<body>
+	<div th:replace="fragments/header :: header"></div>
+	<div class="container">
+		<div class="hero-unit">
+			<h1>發布公告</h1>
+		<form class="form-horizontal" th:action="@{/admin/addmessage}"
+				method="post" enctype="multipart/form-data" onsubmit="javascript:return check()">
+				<fieldset class="box1-fieldset">
+				<input type="hidden" name="messageId" th:value="*{messageId}" />
+				
+				<div class="form-group">
+					<label for="messageName" class="col-sm-2 control-label">公告名稱</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" name="messageName"
+							id="messageName" required />
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="message" class="col-sm-2 control-label">公告內容</label>
+					<textarea class="form-control" name="message"
+						id="message" rows="3" required></textarea>
+				</div>
+				</fieldset>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<input type="submit" value="確認送出" class="btn btn-info" /> <a
+					href="/admin/all" class="btn btn-info">取消發送</a>
+			</div>
+
+		</div>
+		</form>
+		</div>
+		<div th:replace="fragments/footer :: footer"></div>
+	</div>
+
+</body>
+</html>
+
